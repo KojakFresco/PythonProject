@@ -1,11 +1,13 @@
 from typing import Iterable
-from task_platform.task import Task
+from task_platform.task import TaskData
 
 
 class GeneratorTaskSource:
     def __init__(self, count: int) -> None:
         self.count = count
 
-    def get_tasks(self) -> Iterable[Task]:
+    def get_tasks(self) -> Iterable[TaskData]:
         for i in range(self.count):
-            yield Task(id=f"generated-{i}", payload={"type": "generated", "index": i})
+            yield TaskData(
+                id=f"generated-{i}", payload={"type": "generated", "index": i}
+            )

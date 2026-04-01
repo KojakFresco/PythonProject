@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from typing import Iterable
 
 app = FastAPI()
 
@@ -9,5 +10,5 @@ tasks = [
 
 
 @app.get("/tasks")
-def get_tasks():
+def get_tasks() -> Iterable:
     return tasks

@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock
 
 from task_platform.sources.file_source import FileTaskSource
 from task_platform.sources.generator_source import GeneratorTaskSource
-from task_platform.task import Task
+from task_platform.task import TaskData
 from task_platform.sources.api_source import ApiTaskSource
 
 
@@ -14,11 +14,11 @@ def test_file_source(fs: FakeFilesystem):
     )
     file_task_source = FileTaskSource("new")
     print(type(list(file_task_source.get_tasks())[0]))
-    print(type(Task(id="id-1", payload={"type": "email", "user": 10})))
+    print(type(TaskData(id="id-1", payload={"type": "email", "user": 10})))
 
     assert list(file_task_source.get_tasks()) == [
-        Task(id="id-1", payload={"type": "email", "user": 10}),
-        Task(id="id-2", payload={"type": "order", "order_id": 42}),
+        TaskData(id="id-1", payload={"type": "email", "user": 10}),
+        TaskData(id="id-2", payload={"type": "order", "order_id": 42}),
     ]
 
 
@@ -43,6 +43,6 @@ def test_api_source():
         tasks = list(source.get_tasks())
 
         assert tasks == [
-            Task(id="id-1", payload={"type": "email"}),
-            Task(id="id-2", payload={"type": "order"}),
+            TaskData(id="id-1", payload={"type": "email"}),
+            TaskData(id="id-2", payload={"type": "order"}),
         ]
