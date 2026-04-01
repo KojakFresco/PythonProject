@@ -2,6 +2,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import datetime
 
+from task_platform.exceptions import TaskStatusError, TaskPriorityError, TaskValidationError
+
 
 class ReadOnlyNonEmptyString:
     def __set_name__(self, owner, name):
@@ -61,9 +63,7 @@ class RangeInt:
 
     def __set__(self, instance, value):
         if not isinstance(value, int):
-            raise TypeError(
-                f"{self.name[1:]} must be an integer"
-            )
+            raise TypeError(f"{self.name[1:]} must be an integer")
         if not (self.low <= value <= self.high):
             raise ValueError(
                 f"{self.name[1:]} must be an integer between {self.low} and {self.high}"
@@ -95,11 +95,14 @@ class Task:
     created_at = ReadOnly()
 
     def __init__(self, id: str, description: str, priority: int, status: str) -> None:
-        self.id = id
-        self.description = description
-        self.priority = priority
-        self.status = status
-        self.created_at = datetime.datetime.now()
+        try:
+            self.id = id
+            self.description = description
+            self.priority = priority
+            self.status = status
+            self.created_at = datetime.datetime.now()
+        except Exception as e:
+            raise TaskValidationError(f"Invalid task data: {e}") from e
 
     @property
     def is_ready(self) -> bool:
@@ -114,6 +117,24 @@ class Task:
             priority=int(payload.get("priority", 1)),
             status=payload.get("status", "pending"),
         )
+
+    def change_status(self, new_status: str) -> None:
+        try:
+            self.status = new_status
+        except (TypeError, ValueError) as e:
+            raise TaskStatusError(
+                f"Invalid priority value: {e}. "
+                f"Status must be one of 'pending', 'in_progress', or 'completed'"
+            ) from e
+
+    def change_priority(self, new_priority: int) -> None:
+        try:
+            self.priority = new_priority
+        except (TypeError, ValueError) as e:
+            raise TaskPriorityError(
+                f"Invalid priority value: {e}. "
+                f"Priority must be an integer between 1 and 5"
+            ) from e
 
 
 @dataclass(frozen=True)

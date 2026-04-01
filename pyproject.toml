@@ -30,7 +30,7 @@ pythonpath = ["src"]
 source = ["src"]
 branch = true
 parallel = true
-omit = ["*/__init__.py", "*/main.py", "src/task_platform/task.py", "src/task_platform/protocols.py", "*/api_server.py"]
+omit = ["*/__init__.py", "*/main.py", "src/task_platform/protocols.py", "*/api_server.py"]
 
 [tool.coverage.report]
 show_missing = true
