@@ -1,6 +1,10 @@
 import pytest
 
-from task_platform.exceptions import TaskPriorityError, TaskStatusError, TaskValidationError
+from task_platform.exceptions import (
+    TaskPriorityError,
+    TaskStatusError,
+    TaskValidationError,
+)
 from task_platform.task import Task
 
 
@@ -64,3 +68,14 @@ def test_task_change_priority():
 
     with pytest.raises(TaskPriorityError):
         task.change_priority(0)
+
+
+def test_task_str():
+    task = Task(
+        id="task9", description="String representation", priority=2, status="pending"
+    )
+    task_str = str(task)
+    assert "Task(id=task9" in task_str
+    assert "description=String representation" in task_str
+    assert "priority=2" in task_str
+    assert "status=pending" in task_str

@@ -1,12 +1,15 @@
 import pytest
 
 from task_platform.collector import collect_tasks
-from task_platform.task import TaskData
+from task_platform.task import Task, TaskData
 
 
 class FakeSource:
     def get_tasks(self):
-        return [TaskData("1", {"type": "email"}), TaskData("2", {"type": "order"})]
+        return [
+            TaskData("1", {"description": "email"}),
+            TaskData("2", {"description": "order"}),
+        ]
 
 
 class FakeSource2:
@@ -16,15 +19,15 @@ class FakeSource2:
 
 def test_task_collector_with_correct_source():
     fake_tasks = [
-        TaskData("1", {"type": "email"}),
-        TaskData("2", {"type": "order"}),
+        Task("1", "email"),
+        Task("2", "order"),
     ]
 
     tasks = collect_tasks(FakeSource())
 
-    assert tasks == fake_tasks
+    assert list(tasks) == fake_tasks
 
 
 def test_task_collector_with_incorrect_source():
     with pytest.raises(TypeError):
-        collect_tasks(FakeSource2())
+        list(collect_tasks(FakeSource2()))

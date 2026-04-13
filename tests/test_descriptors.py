@@ -2,7 +2,14 @@ import datetime
 
 import pytest
 
-from task_platform.task import AllowedValues, NotEmptyString, RangeInt, ReadOnly, ReadOnlyNonEmptyString, Task
+from task_platform.task import (
+    AllowedValues,
+    NotEmptyString,
+    RangeInt,
+    ReadOnly,
+    ReadOnlyNonEmptyString,
+    Task,
+)
 
 
 def test_read_only_non_empty_string_descriptor_validation():
@@ -96,4 +103,3 @@ def test_read_only_descriptor_validation():
 
     with pytest.raises(AttributeError):
         descriptor.__set__(obj, datetime.datetime.now())
-
