@@ -9,5 +9,9 @@ class GeneratorTaskSource:
     def get_tasks(self) -> Iterable[TaskData]:
         for i in range(self.count):
             yield TaskData(
-                id=f"generated-{i}", payload={"type": "generated", "index": i}
+                id=f"generated-{i}",
+                payload={
+                    "description": "generated_task",
+                    "priority": i * (i % 3) % 5 + 1,
+                },
             )
