@@ -13,7 +13,13 @@ def main():
 
     for task in task_queue.filter_by_priority(1):
         print(task)
-    print(sum(task_queue))
+
+    for task in task_queue:
+        print(task)
+
+    print()
+    for task in task_queue:
+        print(task)
 
 
 if __name__ == "__main__":

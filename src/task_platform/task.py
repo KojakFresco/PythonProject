@@ -39,7 +39,22 @@ class ReadOnly:
         setattr(instance, self.name, value)
 
 
-class NotEmptyString:
+class ReadOnlyDict:
+    def __set_name__(self, owner, name):
+        self.name = "_" + name
+
+    def __get__(self, instance, owner):
+        return getattr(instance, self.name, None)
+
+    def __set__(self, instance, value):
+        if hasattr(instance, self.name):
+            raise AttributeError(f"{self.name[1:]} is read-only")
+        if not isinstance(value, dict):
+            raise TypeError(f"{self.name[1:]} must be a dictionary")
+        setattr(instance, self.name, value)
+
+
+class NonEmptyString:
     def __set_name__(self, owner, name):
         self.name = "_" + name
 
@@ -93,18 +108,25 @@ class AllowedValues:
 
 class Task:
     id = ReadOnlyNonEmptyString()
-    description = NotEmptyString()
+    description = NonEmptyString()
     priority = RangeInt(1, 5)
     status = AllowedValues("pending", "in_progress", "completed")
     created_at = ReadOnly()
+    payload = ReadOnlyDict()
 
     def __init__(
-        self, id: str, description: str, priority: int = 1, status: str = "pending"
+        self,
+        id: str,
+        description: str,
+        priority: int = 1,
+        status: str = "pending",
+        payload: dict | None = None,
     ) -> None:
         try:
             self.id = id
             self.description = description
             self.priority = priority
+            self.payload = payload or {}
             self.status = status
             self.created_at = datetime.datetime.now()
         except Exception as e:
@@ -142,12 +164,20 @@ class Task:
 
     @classmethod
     def from_data(cls, task_data: TaskData) -> Task:
-        payload = task_data.payload
+        raw_payload = task_data.payload
+
+        clean_payload = {
+            k: v
+            for k, v in raw_payload.items()
+            if k not in {"description", "priority", "status"}
+        }
+
         return cls(
             id=task_data.id,
-            description=payload.get("description", ""),
-            priority=int(payload.get("priority", 1)),
-            status=payload.get("status", "pending"),
+            description=raw_payload.get("description", ""),
+            priority=raw_payload.get("priority", 1),
+            status=raw_payload.get("status", "pending"),
+            payload=clean_payload,
         )
 
 
