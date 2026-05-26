@@ -45,16 +45,17 @@ class OrderHandler:
         logger.info(f"OrderHandler: processing order {order_id} for user {user_id}")
 
         await asyncio.sleep(0.1)
-        logger.debug(f"Order {order_id}: validation passed")
+        logger.info(f"Order {order_id}: validation passed")
 
         await asyncio.sleep(0.05)
-        logger.debug(f"Order {order_id}: charged {amount}")
+        logger.info(f"Order {order_id}: charged {amount}")
 
         await asyncio.sleep(0.05)
-        logger.debug(f"Order {order_id}: inventory updated")
+        logger.info(f"Order {order_id}: inventory updated")
 
         logger.info(f"OrderHandler: completed order {order_id}")
 
+        task.change_status("completed")
         return {
             "status": "processed",
             "order_id": order_id,

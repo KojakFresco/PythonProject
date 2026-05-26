@@ -71,7 +71,7 @@ class AsyncExecutor:
         done, pending = await asyncio.wait(
             self._workers,
             timeout=self._graceful_timeout,
-            return_when=asyncio.ALL_COMPLETED
+            return_when=asyncio.ALL_COMPLETED,
         )
 
         for task in pending:
@@ -94,10 +94,7 @@ class AsyncExecutor:
 
         while self._running:
             try:
-                task = await asyncio.wait_for(
-                    self._queue.get(),
-                    timeout=1.0
-                )
+                task = await asyncio.wait_for(self._queue.get(), timeout=1.0)
             except asyncio.TimeoutError:
                 continue
             except asyncio.CancelledError:
@@ -107,7 +104,9 @@ class AsyncExecutor:
             try:
                 await self._process_task(worker_id, task)
             except Exception as e:
-                logger.error(f"Worker {worker_id}: unexpected error: {e}", exc_info=True)
+                logger.error(
+                    f"Worker {worker_id}: unexpected error: {e}", exc_info=True
+                )
             finally:
                 self._queue.task_done()
 
@@ -139,7 +138,10 @@ class AsyncExecutor:
             logger.warning(f"Worker {worker_id}: no handler found for task {task.id}")
             self._failed_tasks.append(task)
         except Exception as e:
-            logger.error(f"Worker {worker_id}: error processing task {task.id}: {e}", exc_info=True)
+            logger.error(
+                f"Worker {worker_id}: error processing task {task.id}: {e}",
+                exc_info=True,
+            )
             self._failed_tasks.append(task)
 
     async def _find_handler(self, task: Task) -> Optional[TaskHandler]:

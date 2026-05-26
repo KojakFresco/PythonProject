@@ -12,7 +12,8 @@ class GeneratorTaskSource:
                 id=f"generated-{i}",
                 payload={
                     "description": "generated_task",
-                    "type": "generated_task",
+                    "type": "order",
+                    "order_id": i,
                     "priority": i * (i % 3) % 5 + 1,
                 },
             )

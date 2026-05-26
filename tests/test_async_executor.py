@@ -60,6 +60,7 @@ def test_executor_processes_task_success():
 
     asyncio.run(runner())
 
+
 @pytest.mark.asyncio
 async def test_executor_records_failed_task_on_exception():
     queue = AsyncTaskQueue()
@@ -92,7 +93,6 @@ async def test_no_handler_records_failed():
     failed = executor.get_failed_tasks()
     assert len(failed) == 1
     assert failed[0].id == task.id
-
 
 
 @pytest.mark.asyncio
