@@ -4,7 +4,7 @@ import pytest
 
 from task_platform.task import (
     AllowedValues,
-    NotEmptyString,
+    NonEmptyString,
     RangeInt,
     ReadOnly,
     ReadOnlyNonEmptyString,
@@ -35,7 +35,7 @@ def test_read_only_non_empty_string_descriptor_validation():
 
 
 def test_not_empty_string_descriptor_validation():
-    descriptor = NotEmptyString()
+    descriptor = NonEmptyString()
     descriptor.__set_name__(Task, "description")
 
     class Dummy:

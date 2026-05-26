@@ -19,8 +19,8 @@ class FakeSource2:
 
 def test_task_collector_with_correct_source():
     fake_tasks = [
-        Task("1", "email"),
-        Task("2", "order"),
+        Task(id="1", description="email", priority=2),
+        Task(id="2", description="order", priority=3),
     ]
 
     tasks = collect_tasks(FakeSource())

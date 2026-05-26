@@ -1,4 +1,4 @@
-from typing import Iterator, Iterable
+from typing import Iterator
 
 from task_platform.protocols import TaskSource
 from task_platform.task import Task
@@ -26,12 +26,12 @@ class TaskQueue:
     def from_source(self, source: TaskSource) -> None:
         self._generators.append(lambda s=source: collect_tasks(s))
 
-    def filter_by_status(self, status: str) -> Iterable[Task]:
+    def filter_by_status(self, status: str) -> Iterator[Task]:
         for task in self:
             if task.status == status:
                 yield task
 
-    def filter_by_priority(self, priority: int) -> Iterable[Task]:
+    def filter_by_priority(self, priority: int) -> Iterator[Task]:
         for task in self:
             if task.priority == priority:
                 yield task

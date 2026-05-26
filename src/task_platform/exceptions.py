@@ -12,3 +12,7 @@ class TaskStatusError(TaskValidationError):
 
 class TaskPriorityError(TaskValidationError):
     """Raised when a task has an invalid priority."""
+
+
+class NoHandlerError(Exception):
+    """Raised when no handler can process a task."""
